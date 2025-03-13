@@ -6,41 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tauri App</title>
     <script type="module" src="/main.js" defer></script>
-    <style>
-      .logo.vanilla:hover {
-        filter: drop-shadow(0 0 2em #ffe21c);
-      }
-    </style>
   </head>
 
   <body>
-    <div class="container">
-      <h1>Welcome to Tauri!</h1>
-
-      <div class="row">
-        <a href="https://tauri.app" target="_blank">
-          <img src="/assets/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a
-          href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
-          target="_blank"
-        >
-          <img
-            src="/assets/javascript.svg"
-            class="logo vanilla"
-            alt="JavaScript logo"
-          />
-        </a>
+    <div class="view">
+      <div class="server_bar">
+        <button class="server_icon" style="background-image: url(assets/consensus256.png);"><span>Direct Messages</span></button>
+        <hr>
+        <div id="server_bar">
+        </div>
       </div>
+      <div class="main_container">
+        <div class="main_sidebar" id="main_sidebar">
+          <div class="header" id="main_sidebar_header">
+            <span>Channel bar</span>
+          </div>
+          <div class="main_sidebar_list" id="main_sidebar_list">
 
-      <p>Click on the Tauri logo to learn more about the framework</p>
+          </div>
 
-      <form class="row" id="greet-form">
-        <input id="greet-input" placeholder="Enter a name..." />
-        <button type="submit">Greet</button>
-      </form>
+          <div class="sidebar_settings">
+            <button class="account_area">
+              <img src="assets/consensus256.png">
+              <div>
+                <span style="color: var(--text-c);" id="sidebar_settings_account">account name</span><br>
+                <span style="color: var(--text-medium-c);" id="sidebar_settings_status">ask me about</span>
+              </div>
+            </button>
+            <div class="quick_settings">
+              <button>M</button><button>S</button><button>S</button>
+            </div>
+          </div>
+        </div>
+        <div class="main_panel" id="main_panel">
+          <div class="header" id="main_panel_header">
+            <span>chat panel</span>
+          </div>
 
-      <p id="greet-msg"></p>
+
+        </div>
+      
+      </div>
     </div>
+    <div class="loading_cover" id="loading_cover"></div>
   </body>
 </html>

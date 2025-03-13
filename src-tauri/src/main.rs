@@ -1,15 +1,53 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+use tauri::Manager;
+
+mod server;
+
+
+/// Current open view
+enum AppContext {
+    /// Current view is login
+    Login,
+    /// Current view is an open server with id
+    Server(String, String),
+    DirectMessage(String),
+    Friends,
+}
+
+struct Account {
+    instance: String,
+    id: String,
+    username: String,
+    email: String,
+    authkey_private: String,
+}
+
+struct AppState {
+    context: AppContext,
+    servers: Vec<server::ServerInfo>,
+    account: Option<Account>,
 }
 
 fn main() {
+    let app_state = AppState {
+        context: AppContext::Login,
+        servers: vec![server::ServerInfo::test_server()],
+        account: Some( Account { instance: "localhost".to_string(),
+            id: "0921737".to_string(),
+            username: "VioletSpace".to_string(),
+            email: "vi@gmail.com".to_string(),
+            authkey_private: "323981381238".to_string()
+        }),
+    };
+
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
+        .setup(|app| {
+            app.manage(std::sync::Mutex::new(app_state));
+            Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![server::get_server_list, server::open_server])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
