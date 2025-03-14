@@ -1,4 +1,6 @@
-use std::sync::Mutex;
+
+
+use tauri::async_runtime::Mutex;
 
 use crate::AppContext;
 
@@ -48,12 +50,12 @@ pub fn get_server_list() -> Vec<ServerInfo> {
 }
 
 #[tauri::command]
-pub fn open_server(state: tauri::State<'_,Mutex<crate::AppState> > , instance: &str, id: &str) -> ServerStructure {
-    let mut astate = state.lock().unwrap();
+pub async fn open_server(state: tauri::State<'_,Mutex<crate::AppState> > , instance: &str, id: &str) -> Result<ServerStructure, ()> {
+    let mut astate = state.lock().await;
     astate.context = AppContext::Server(instance.into(), id.into());
-    ServerStructure {
+    Ok(ServerStructure {
         name: "Consensus Server".to_string(),
         channels: vec![("general".to_string(), "10382".to_string()), ("genderal".to_string(), "1230382".to_string())],
         roles: vec![],
-    }
+    })
 }

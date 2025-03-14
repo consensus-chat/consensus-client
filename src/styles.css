@@ -1,15 +1,39 @@
-:root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
+@font-face {
+  font-family: "Roboto";
+  src: url(assets/fonts/Roboto-VariableFont_wdth\,wght.ttf) format("truetype");
+  font-style: normal;
+}
 
+@font-face {
+  font-family: "Roboto";
+  src: url(assets/fonts/Roboto-Italic-VariableFont_wdth\,wght.ttf) format("truetype");
+  font-style: italic;
+}
+
+:root {
+  --font-size-base: 16px;
+
+  /*
   --background-light-c: #3b2337;
   --background-medium-c: #331e2f;
   --background-dark-c: #21141f;
   --text-c: #FFF;
   --text-medium-c: #AAA;
+  */
 
+  --background-light-c: #FFF;
+  --background-medium-c: #f4f3f5;
+  --background-dark-c: #e5e3e8;
+  --text-c: #333;
+  --text-medium-c: #666;
+  --accent-c: #73D;
+  --accent-success-c: #2B4;
+  --accent-error-c: #B25;
+
+  font-family: "Roboto", "Roboto Italic", Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
 
   color: var(--text-c);
   background-color: var(--background-medium-c);
@@ -20,12 +44,21 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    color: #f6f6f6;
-    background-color: #2f2f2f;
+    --background-light-c: #000;
+    --background-medium-c: #111;
+    --background-dark-c: #222;
+    --text-c: #FFF;
+    --text-medium-c: #BBB;
+    --accent-c: #96D;
+    --accent-success-c: #5D7;
+    --accent-error-c: #B25;
   }
 }
 
@@ -44,10 +77,10 @@ body {
   height: 100vh;
   width: 100vw;
   display: grid;
-  grid-template-columns: 72px 1fr;
+  grid-template-columns: 73px 1fr;
 }
 
-.loading_cover {
+.view_cover {
   height: 100vh;
   width: 100vw;
   background-color: var(--background-light-c);
@@ -55,18 +88,108 @@ body {
   top: 0;
 }
 
+#loading_cover {
+  background-size: 100px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url(assets/consensus256.png);
+}
+
+#login_screen {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url(assets/colours_background.jpeg);
+}
+
+#login_screen::before {
+  content: "";
+  display: block;
+  width: 600px;
+  height: 100vh;
+  background-color: var(--background-light-c);
+  border-right: 1px solid var(--text-c);
+}
+
+.login_form_container {
+  height: 100%;
+  width: max-content;
+  max-width: 400px;
+  position: absolute;
+  top: 0;
+  margin-left: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_form_container div h1 {
+  margin-top: 0;
+  font-weight: 900;
+}
+
+.login_form_container div p {
+  font-style: italic;
+}
+
+form input[type=text], input[type=password] {
+  width: 100%;
+  font-size: var(--font-size-base);
+  padding: 7px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid var(--text-c);
+  background-color: var(--background-medium-c);
+  color: var(--text-c);
+}
+
+form input[type=submit], input[type=button] {
+  width: 100%;
+  font-size: var(--font-size-base);
+  padding: 8px;
+  margin-top: 16px;
+  background-color: var(--accent-c);
+  color: var(--background-light-c);
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+form label {
+  font-size: calc(var(--font-size-base) * 0.8);
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-medium-c);
+}
+
+form input[type=submit]:hover {
+  background-color: color-mix(in oklab, var(--accent-c) 90%, var(--background-light-c) 10%);
+}
+
+a {
+  color: var(--accent-c);
+}
+
+
+
+/* Server Bar */
 .server_bar {
   margin: 0;
   width: 72px;
   background-color: var(--background-dark-c);
   height: 100vh;
   display: inline-block;
+  border-right: 1px solid var(--text-c);
 }
 
 .server_bar hr {
   margin: 0 auto;
-  width: 32px;
-  border: solid 1px var(--background-light-c);
+  width: 48px;
+  border: none;
+  border-top: solid 1px var(--text-medium-c);
+  box-sizing: border-box;
 }
 
 .server_icon {
@@ -88,11 +211,11 @@ body {
 .server_icon span {
   position: absolute;
   left: 65px;
-  top: 10px;
+  top: 8px;
   z-index: 99;
-  background-color: #111;
-  color: #FFF;
-  padding: 5px 8px;
+  background-color: var(--background-light-c);
+  color: var(--text-c);
+  padding: 8px 11px;
   font-size: 14.5px;
   font-weight: 600;
   border-radius: 4px;
@@ -111,9 +234,13 @@ body {
   border-radius: 12px;
 }
 
+
+
+/* Main view panel, holds server, dm and friends view*/
+
 .main_container {
   height: 100vh;
-  width: calc(100vw - 72px);
+  width: calc(100vw - 73px);
   display: grid;
   grid-template-columns: 240px 1fr;
 }
@@ -121,15 +248,17 @@ body {
 .main_sidebar {
   background-color: var(--background-medium-c);
   position: relative;
+  border-right: 1px solid var(--text-c);
+  box-sizing: border-box;
 }
 
 .main_sidebar .header {
   height: 48px;
-  box-shadow: 0px 2px 2px black;
   line-height: 48px;
   padding: 0 12px;
   box-sizing: border-box;
   font-weight: 600;
+  border-bottom: 1px solid var(--text-medium-c);
 }
 
 .header span {
@@ -150,6 +279,7 @@ body {
   background-color: var(--background-dark-c);
   position: absolute;
   bottom: 0;
+  border-top: 1px solid var(--text-c);
 }
 
 .sidebar_settings .account_area {
@@ -220,9 +350,10 @@ body {
 
 .main_panel .header {
   height: 48px;
-  box-shadow: 0px 2px 2px black;
   line-height: 48px;
   padding: 0 12px;
   box-sizing: border-box;
   font-weight: 600;
+  border-bottom: 1px solid var(--text-medium-c);
+  color: var(--text-medium-c);
 }

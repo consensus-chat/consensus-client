@@ -1,20 +1,45 @@
 const { invoke } = window.__TAURI__.tauri;
 
+let logged_in = false;
 let servers;
 
-async function greet() {
-  // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-  greetMsgEl.textContent = await invoke("greet", { name: greetInputEl.value });
-}
-
 window.addEventListener("DOMContentLoaded", () => {
+  // Pull state
   
-  get_server_list()
+  if (logged_in) {
+    start_app();
+  } else {
+    document.getElementById("login_button").addEventListener("click", e => {
+      validate_login();
+    })
+  }
 
   document.getElementById("loading_cover").style.display = "none";
 });
 
-async function get_server_list() {
+
+// Validate login data
+async function validate_login() {
+  let instance = document.getElementById("login_instance").value;
+  let email = document.getElementById("login_email").value;
+  let password = document.getElementById("login_password").value;
+  try {
+    let response = await invoke("attempt_login", { instance: instance, email: email, password: password });
+    console.log("Logged in.")
+    start_app()
+  } catch (err) {
+    document.getElementById("login_failure").innerHTML = err;
+  }
+}
+
+// Starts the main app, after a successful login
+function start_app() {
+  document.getElementById("login_screen").style.display = "none";
+  build_server_list()
+}
+
+// 
+async function build_server_list() {
   servers = await invoke("get_server_list");
   let sBar = document.getElementById("server_bar")
   servers.forEach(server => {
