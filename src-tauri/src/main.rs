@@ -1,13 +1,17 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use std::collections::HashMap;
+
+use network::ConsensusToken;
+use server::ServerInfo;
 use tauri::{async_runtime::Mutex, Manager};
 
-mod networking;
+mod network;
 mod server;
+mod user;
 
-use networking::ConsensusReq;
-
+use tauri_plugin_store::StoreExt;
 
 /// Current open view
 enum AppContext {
@@ -19,6 +23,7 @@ enum AppContext {
     Friends,
 }
 
+#[derive(Clone, serde::Deserialize, serde::Serialize)]
 struct Account {
     instance: String,
     id: String,
@@ -27,56 +32,80 @@ struct Account {
     authkey_private: String,
 }
 
+#[derive(Clone, serde::Deserialize, serde::Serialize)]
+struct OnlineInfo {
+    servers: Vec<server::ServerInfo>,
+}
+
 struct AppState {
     context: AppContext,
     servers: Vec<server::ServerInfo>,
     account: Option<Account>,
     client: reqwest::Client,
+    /// Information that is stored on the sign-on instance and synced over all devices. This includes most
+    /// of the application info like added servers, friends and some settings
+    online_info: Option<OnlineInfo>,
+    /// Authentication tokens for instances. Do not access these directly, use the `AppState::token()`
+    /// function instead. The function checks for token validity and automatically requests new tokens
+    /// from instances.
+    auth_tokens: HashMap<String, ConsensusToken>
 }
 
-#[tauri::command]
-async fn attempt_login(state: tauri::State<'_,Mutex<crate::AppState> > , instance: String, email: String, password: String) -> Result<String, String> {
-    let res = networking::make_req(
-        state,
-        instance,
-        ConsensusReq::Login {
-            email,
-            password
-        }
-    ).await;
+#[derive(Clone, serde::Deserialize, serde::Serialize)]
+struct InterfaceState {
+    account: Option<Account>,
+    servers: Vec<ServerInfo>,
+}
 
-    match res {
-        Ok(res) => match res {
-            networking::ConsensusRes::Login { res } => {
-                match res {
-                    Ok(key) => Ok(key),
-                    Err(e) => Err(e)
-                }
-            }
-        },
-        Err(e) => Err(e),
+impl InterfaceState {
+    fn from_app_state(state: &AppState) -> InterfaceState {
+        InterfaceState {
+            account: state.account.clone(),
+            servers: state.servers.clone()
+        }
     }
 }
 
-fn main() {
-    let app_state = AppState {
-        context: AppContext::Login,
-        servers: vec![server::ServerInfo::test_server()],
-        account: Some( Account { instance: "localhost".to_string(),
-            id: "0921737".to_string(),
-            username: "VioletSpace".to_string(),
-            email: "vi@gmail.com".to_string(),
-            authkey_private: "323981381238".to_string()
-        }),
-        client: reqwest::Client::new(),
-    };
 
+#[tauri::command]
+async fn pull_state(state: tauri::State<'_, Mutex<crate::AppState>>) -> Result<InterfaceState, ()> {
+    let lstate = &state.lock().await;
+    Ok(InterfaceState::from_app_state(&lstate))
+}
+
+fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(tauri_plugin_shell::init())
         .setup(|app| {
+            let store = app.store("store.json")?;
+
+            let app_state = AppState {
+                context: AppContext::Login,
+                servers: vec![server::ServerInfo::test_server()],
+                account: match store.get("account") {
+                        Some(account) => Some(serde_json::from_value(account)?),
+                        None => None,
+                    },
+                client: reqwest::Client::new(),
+                online_info: None,
+                auth_tokens: HashMap::new(),
+            };
+
+            app.manage(store);
             app.manage(Mutex::new(app_state));
+
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![attempt_login, server::get_server_list, server::open_server])
+        .invoke_handler(tauri::generate_handler![
+            user::attempt_login,
+            user::attempt_registration,
+            user::gather_account_info,
+            pull_state,
+            server::get_server_list,
+            server::open_server
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+
 }

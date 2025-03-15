@@ -9,7 +9,7 @@
   </head>
 
   <body>
-    <div class="view">
+    <div class="view" style="display: none;" id="main_view">
       <div class="server_bar">
         <button class="server_icon" style="background-image: url(assets/consensus256.png);"><span>Direct Messages</span></button>
         <hr>
@@ -49,22 +49,7 @@
       </div>
     </div>
     <div class="view_cover" id="login_screen">
-      <div class="login_form_container">
-        <div>
-          <h1>Consensus Login</h1>
-          <p>Enter your details here to authenticate this client with your sign-on instance.</p>
-          <form>
-            <label for="instance">Instance</label><br>
-            <input type="text" id="login_instance" name="instance" placeholder="your-instance.org"><br>
-            <label for="mail">Email</label><br>
-            <input type="text" id="login_email" name="email" placeholder="your@mail.org"><br>
-            <label for="password">Password</label><br>
-            <input type="password" id="login_password" name="password" placeholder="Password"><br>
-            <label style="color: var(--accent-error-c);" id="login_failure"></label>
-            <input type="button" id="login_button" value="Login"><br>
-          </form>
-          <p style="font-style: italic;">Do you need help? Click <a href="https://consensus-chat.github.io/help#login" target="_blank">here</a>.</p>
-        </div>
+      <div class="login_form_container" id="login_form_container">
       </div>
     </div>
     <div class="view_cover" id="loading_cover"></div>

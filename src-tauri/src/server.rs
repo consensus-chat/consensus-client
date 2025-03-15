@@ -1,10 +1,8 @@
-
-
 use tauri::async_runtime::Mutex;
 
 use crate::AppContext;
 
-#[derive(serde::Serialize, Clone)]
+#[derive(Clone, serde::Deserialize, serde::Serialize)]
 pub struct ServerInfo {
     name: String,
     instance: String,
@@ -18,7 +16,7 @@ impl ServerInfo {
             name: "Consensus Server".to_string(),
             instance: "localhost".to_string(),
             id: "000000".to_string(),
-            channel_open_id: "0312309832".into()
+            channel_open_id: "0312309832".into(),
         }
     }
 }
@@ -41,21 +39,31 @@ pub struct ServerRole {
 
 #[tauri::command]
 pub fn get_server_list() -> Vec<ServerInfo> {
-    vec![ServerInfo {
-        name: "Consensus Server".to_string(),
-        instance: "localhost".to_string(),
-        id: "000000".to_string(),
-        channel_open_id: "9728127".into()
-    }; 1]
+    vec![
+        ServerInfo {
+            name: "Consensus Server".to_string(),
+            instance: "localhost".to_string(),
+            id: "000000".to_string(),
+            channel_open_id: "9728127".into()
+        };
+        1
+    ]
 }
 
 #[tauri::command]
-pub async fn open_server(state: tauri::State<'_,Mutex<crate::AppState> > , instance: &str, id: &str) -> Result<ServerStructure, ()> {
+pub async fn open_server(
+    state: tauri::State<'_, Mutex<crate::AppState>>,
+    instance: &str,
+    id: &str,
+) -> Result<ServerStructure, ()> {
     let mut astate = state.lock().await;
     astate.context = AppContext::Server(instance.into(), id.into());
     Ok(ServerStructure {
         name: "Consensus Server".to_string(),
-        channels: vec![("general".to_string(), "10382".to_string()), ("genderal".to_string(), "1230382".to_string())],
+        channels: vec![
+            ("general".to_string(), "10382".to_string()),
+            ("genderal".to_string(), "1230382".to_string()),
+        ],
         roles: vec![],
     })
 }

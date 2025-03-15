@@ -51,11 +51,11 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-light-c: #000;
-    --background-medium-c: #111;
-    --background-dark-c: #222;
-    --text-c: #FFF;
-    --text-medium-c: #BBB;
+    --background-light-c: #2c2c2c;
+    --background-medium-c: #212022;
+    --background-dark-c: #1a181d;
+    --text-c: #CCC;
+    --text-medium-c: #AAA;
     --accent-c: #96D;
     --accent-success-c: #5D7;
     --accent-error-c: #B25;
@@ -100,6 +100,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-image: url(assets/colours_background.jpeg);
+  display: none;
 }
 
 #login_screen::before {
@@ -121,6 +122,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: transform 0.5s;
 }
 
 .login_form_container div h1 {
@@ -132,7 +134,7 @@ body {
   font-style: italic;
 }
 
-form input[type=text], input[type=password] {
+form input[type=text], input[type=password], input[type=email] {
   width: 100%;
   font-size: var(--font-size-base);
   padding: 7px;
@@ -148,13 +150,20 @@ form input[type=submit], input[type=button] {
   width: 100%;
   font-size: var(--font-size-base);
   padding: 8px;
-  margin-top: 16px;
-  background-color: var(--accent-c);
-  color: var(--background-light-c);
-  border: none;
+  margin-bottom: 8px;
+  background-color: var(--background-dark-c);
+  color: var(--text-c);
+  border: 1px solid var(--text-c);
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+}
+
+form input[type=submit], input[type=button].highlighted {
+  background-color: var(--accent-c);
+  color: var(--background-light-c);
+  padding: 9px;
+  border: none;
 }
 
 form label {
@@ -164,8 +173,16 @@ form label {
   color: var(--text-medium-c);
 }
 
-form input[type=submit]:hover {
+form input[type=button]:hover {
+  background-color: color-mix(in oklab, var(--background-dark-c) 70%, var(--background-light-c) 30%);
+}
+
+form input[type=button].highlighted:hover {
   background-color: color-mix(in oklab, var(--accent-c) 90%, var(--background-light-c) 10%);
+}
+
+form input:invalid {
+  border: 1px solid var(--accent-error-c);
 }
 
 a {
