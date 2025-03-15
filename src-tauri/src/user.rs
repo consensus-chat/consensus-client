@@ -24,20 +24,17 @@ pub async fn attempt_login(
 
     match res {
         Ok(res) => match res {
-            network::ConsensusRes::Login { res } => match res {
-                Ok(res) => {
-                    let account = Account {
-                        instance: res.0.clone(),
-                        id: res.1.clone(),
-                        username: res.2.clone(),
-                        email: res.3.clone(),
-                        authkey_private: res.4.clone(),
-                    };
-                    state.account = Some(account.clone());
-                    
-                    Ok(account)
-                }
-                Err(e) => Err(e),
+            network::ConsensusRes::Login(instance, id, username, email, authkey_private) => {
+                let account = Account {
+                    instance,
+                    id,
+                    username,
+                    email,
+                    authkey_private,
+                };
+                state.account = Some(account.clone());
+                
+                Ok(account)
             },
             _ => Err("Unexpected response".into())
         },
@@ -62,20 +59,17 @@ pub async fn attempt_registration(
 
     match res {
         Ok(res) => match res {
-            network::ConsensusRes::Login { res } => match res {
-                Ok(res) => {
-                    let account = Account {
-                        instance: res.0.clone(),
-                        id: res.1.clone(),
-                        username: res.2.clone(),
-                        email: res.3.clone(),
-                        authkey_private: res.4.clone(),
-                    };
-                    state.account = Some(account.clone());
-                    
-                    Ok(account)
-                }
-                Err(e) => Err(e),
+            network::ConsensusRes::Login(instance, id, username, email, authkey_private) => {
+                let account = Account {
+                    instance,
+                    id,
+                    username,
+                    email,
+                    authkey_private,
+                };
+                state.account = Some(account.clone());
+                
+                Ok(account)
             },
             _ => Err("Unexpected response".into())
         },
@@ -99,12 +93,7 @@ pub async fn request_token(state: &crate::AppState, instance: &str) -> Result<Co
     match res {
         Ok(res) => {
             match res {
-                ConsensusRes::Token { res } => {
-                    match res {
-                        Ok(token) => Ok(token),
-                        Err(_) => Err(()),
-                    }
-                },
+                ConsensusRes::Token(token) => Ok(token),
                 _ => Err(()),
             }
         },
