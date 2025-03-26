@@ -1,6 +1,8 @@
 const invoke = window.__TAURI__.core.invoke;
+const { getCurrentWindow } = window.__TAURI__.window;
 
 var interface_state;
+const appWindow = getCurrentWindow();
 
 function loading(l) {
   if (l) {
@@ -15,12 +17,73 @@ function dId(id) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  setup_titlebar();
+  setup_left_sidebar();
+
   // Pull state
   pull_state();
   // Is logged in?
   check_login();
 });
 
+async function setup_titlebar() {
+  document
+    .getElementById('titlebar-minimize')
+    ?.addEventListener('click', () => appWindow.minimize());
+  document
+    .getElementById('titlebar-maximize')
+    ?.addEventListener('click', () => appWindow.toggleMaximize());
+  document
+    .getElementById('titlebar-close')
+    ?.addEventListener('click', () => appWindow.close());
+
+  const max = await appWindow.isMaximized()
+  if (max) {
+    dId('titlebar-maximize').firstElementChild.setAttribute('src', 'assets/icons/window_restore.png')
+  } else {
+    dId('titlebar-maximize').firstElementChild.setAttribute('src', 'assets/icons/window_maximize.png')
+  }
+
+  const unlisten = await appWindow.onResized(async ({ payload: size }) => {
+    const max = await appWindow.isMaximized()
+    if (max) {
+      dId('titlebar-maximize').firstElementChild.setAttribute('src', 'assets/icons/window_restore.png')
+    } else {
+      dId('titlebar-maximize').firstElementChild.setAttribute('src', 'assets/icons/window_maximize.png')
+    }
+  });
+
+}
+
+async function setup_left_sidebar() {
+  let startData;
+  const handle = dId("left_resize_handle");
+  const container = dId('left_sidebar');
+
+  function resizeHandler(e) {
+    const eventPos = e.clientX
+    const diff = eventPos - startData.startPos;
+    const newWidth = Math.max(0, startData.startWidth + diff);
+    container.style.width = `${newWidth}px`;
+  }
+
+  handle.addEventListener('pointerdown', e => {
+    console.log(e)
+
+    const currentWidth = container.clientWidth;
+    startData = {
+      startPos: e.clientX,
+      startWidth: currentWidth,
+    };
+    console.log(startData)
+
+    window.addEventListener('pointermove', resizeHandler);
+
+    window.addEventListener('pointerup', e => {
+      window.removeEventListener('pointermove', resizeHandler);
+    });
+  })
+}
 
 async function pull_state() {
   interface_state = await invoke("pull_state");
@@ -47,7 +110,7 @@ async function display_login_screen() {
   })
   dId("register_button").addEventListener("click", async e => {
     dId("login_form_container").style.transform = "translateX(-1000px)";
-    await new Promise(r => setTimeout(r, 500));
+    await new Promise(r => setTimeout(r, 300));
     display_register_screen();
   })
 }
@@ -61,7 +124,7 @@ async function display_register_screen() {
   })
   dId("login_button").addEventListener("click", async e => {
     dId("login_form_container").style.transform = "translateX(-1000px)";
-    await new Promise(r => setTimeout(r, 500));
+    await new Promise(r => setTimeout(r, 300));
     display_login_screen();
   })
 }
@@ -147,6 +210,9 @@ async function build_server_list() {
 }
 
 async function open_server(server_instance, server_id) {
+  function appendChannel(el, ch) {
+    el.innerHTML += `<div class="channel_button"><img src="assets/icons/hash.svg">${ch[0]}</div>`;
+  }
   console.log("opening server " + server_instance + server_id)
   let server_structure = await invoke("open_server", { instance: server_instance, id: server_id });
   dId("main_sidebar_header").innerHTML = '<span>' + server_structure.name + '</span>'
@@ -155,7 +221,7 @@ async function open_server(server_instance, server_id) {
   channel_list.innerHTML = "";
 
   server_structure.channels.forEach( channel => {
-    channel_list.innerHTML += '<p>' + channel[0] + '</p>';
+    appendChannel(channel_list, channel)
   });
 }
 
@@ -164,7 +230,7 @@ async function open_server(server_instance, server_id) {
 // HTML Elements
 
 function el_login() {
-  return `<div>
+  return `<div class="no_scroll_bar">
   <h1>Consensus Login</h1>
   <p>Enter your details here to authenticate this client with your sign-on instance.</p>
   <form>
@@ -187,7 +253,7 @@ function el_login() {
 }
 
 function el_register() {
-  return `<div>
+  return `<div class="no_scroll_bar">
   <h1>Consensus Registration</h1>
   <p>Enter your details here to register a new account on an instance.</p>
   <form>

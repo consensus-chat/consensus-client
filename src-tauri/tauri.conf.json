@@ -24,15 +24,18 @@
         "fullscreen": false,
         "resizable": true,
         "title": "Consensus",
-        "width": 800,
+        "width": 900,
         "height": 600,
-        "minWidth": 940,
-        "minHeight": 600,
-        "useHttpsScheme": true
+        "minWidth": 806,
+        "minHeight": 508,
+        "useHttpsScheme": true,
+        "decorations": false,
+        "transparent": true
       }
     ],
     "security": {
-      "csp": null
+      "csp": null,
+      "capabilities": ["main-capability"]
     }
   }
 }

@@ -11,7 +11,7 @@
 }
 
 :root {
-  --font-size-base: 16px;
+  --font-size-base: 15px;
 
   /*
   --background-light-c: #3b2337;
@@ -21,9 +21,11 @@
   --text-medium-c: #AAA;
   */
 
+  --background-c: #f4f3f5;
   --background-light-c: #FFF;
-  --background-medium-c: #f4f3f5;
-  --background-dark-c: #e5e3e8;
+  --background-highlight-c: #18161b22;
+  --background-highlight-dark-c: #18161b33;
+  --border-c: #d0c5dc;
   --text-c: #333;
   --text-medium-c: #666;
   --accent-c: #73D;
@@ -31,12 +33,12 @@
   --accent-error-c: #B25;
 
   font-family: "Roboto", "Roboto Italic", Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
+  font-size: var(--font-size-base);
   line-height: 24px;
   font-weight: 400;
 
   color: var(--text-c);
-  background-color: var(--background-medium-c);
+  background-color: var(--background-light-c);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -51,11 +53,12 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-light-c: #2c2c2c;
-    --background-medium-c: #212022;
-    --background-dark-c: #1a181d;
+    --background-c: #000000;
+    --background-light-c: #0c0c0e;
+    --background-highlight-c: #e4d1ff33;
+    --border-c: #242226;
     --text-c: #CCC;
-    --text-medium-c: #AAA;
+    --text-medium-c: #888;
     --accent-c: #96D;
     --accent-success-c: #5D7;
     --accent-error-c: #B25;
@@ -68,24 +71,78 @@ body {
   display: table;
   clear: both;
   overflow: hidden;
-  background-color: var(--background-dark-c);
+  background-color: var(--background-c);
+}
+
+.no_scroll_bar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.title_bar_container {
+  height: 36px;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background-color: var(--background-c);
+}
+
+.titlebar-button {
+  display: inline-flex;
+  align-self: flex-end;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 36px;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+}
+
+.titlebar-button:hover {
+  background: var(--background-highlight-c);
+}
+
+@media (prefers-color-scheme: dark) {
+  .titlebar-button img {
+      filter: invert() brightness(0.8);
+    }
+}
+
+.titlebar-close:hover {
+  background-color: var(--accent-error-c);
+}
+
+.titlebar-close:hover img {
+  filter: invert();
 }
 
 .view {
   margin: 0;
   padding: 0;
-  height: 100vh;
+  margin-top: 36px;
+  height: calc(100vh - 36px);
   width: 100vw;
   display: grid;
-  grid-template-columns: 73px 1fr;
+  grid-template-columns: auto 1fr;
+  position: relative;
 }
 
 .view_cover {
-  height: 100vh;
-  width: 100vw;
-  background-color: var(--background-light-c);
+  background-color: var(--background-c);
   position: absolute;
   top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
 }
 
 #loading_cover {
@@ -108,7 +165,7 @@ body {
   display: block;
   width: 600px;
   height: 100vh;
-  background-color: var(--background-light-c);
+  background-color: var(--background-c);
   border-right: 1px solid var(--text-c);
 }
 
@@ -122,11 +179,21 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: transform 0.5s;
+  transition: transform 0.3s;
+}
+
+.login_form_container div {
+  overflow-y: auto;
+  max-height: 100%;
+  padding-bottom: 32px;
+}
+
+.login_form_container div::-webkit-scrollbar {
+  display: none;
 }
 
 .login_form_container div h1 {
-  margin-top: 0;
+  margin-top: 16px;
   font-weight: 900;
 }
 
@@ -142,7 +209,7 @@ form input[type=text], input[type=password], input[type=email] {
   box-sizing: border-box;
   border-radius: 8px;
   border: 1px solid var(--text-c);
-  background-color: var(--background-medium-c);
+  background-color: var(--background-light-c);
   color: var(--text-c);
 }
 
@@ -151,7 +218,7 @@ form input[type=submit], input[type=button] {
   font-size: var(--font-size-base);
   padding: 8px;
   margin-bottom: 8px;
-  background-color: var(--background-dark-c);
+  background-color: var(--background-highlight-c);
   color: var(--text-c);
   border: 1px solid var(--text-c);
   border-radius: 8px;
@@ -161,7 +228,7 @@ form input[type=submit], input[type=button] {
 
 form input[type=submit], input[type=button].highlighted {
   background-color: var(--accent-c);
-  color: var(--background-light-c);
+  color: var(--background-c);
   padding: 9px;
   border: none;
 }
@@ -174,11 +241,11 @@ form label {
 }
 
 form input[type=button]:hover {
-  background-color: color-mix(in oklab, var(--background-dark-c) 70%, var(--background-light-c) 30%);
+  background-color: color-mix(in oklab, var(--background-highlight-c) 70%, var(--background-c) 30%);
 }
 
 form input[type=button].highlighted:hover {
-  background-color: color-mix(in oklab, var(--accent-c) 90%, var(--background-light-c) 10%);
+  background-color: color-mix(in oklab, var(--accent-c) 90%, var(--background-c) 10%);
 }
 
 form input:invalid {
@@ -191,30 +258,60 @@ a {
 
 
 
-/* Server Bar */
+/*
+  Left side bar
+  contains server list, channel select and quick settings
+*/
+
+.left_sidebar {
+  display: grid;
+  grid-template-columns: 73px 1fr;
+  /*position: absolute;
+  top: 0;
+  bottom: 0;*/
+  padding-bottom: 64px;
+  min-width: 265px;
+  max-width: 433px;
+  width: 350px;
+  border-right: 1px solid var(--border-c);
+  position: relative;
+  height: calc(100vh - 100px);
+  z-index: 1;
+}
+
+.resize_handle {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 6px;
+  height: 100%;
+  cursor: ew-resize;
+  display: initial;
+}
+
 .server_bar {
-  margin: 0;
   width: 72px;
-  background-color: var(--background-dark-c);
-  height: 100vh;
   display: inline-block;
-  border-right: 1px solid var(--text-c);
+  grid-column: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .server_bar hr {
   margin: 0 auto;
-  width: 48px;
+  margin-bottom: 8px;
+  width: 36px;
   border: none;
-  border-top: solid 1px var(--text-medium-c);
+  border-top: solid 1px var(--border-c);
   box-sizing: border-box;
 }
 
 .server_icon {
-  width: 48px;
-  height: 48px;
-  margin: 8px 12px 0px 12px;
+  width: 40px;
+  height: 40px;
+  margin: 0px 16px 8px 16px;
   border: none;
-  border-radius: 24px;
+  border-radius: 8px;
   transition: border-radius 0.25s;
   cursor: pointer;
   background-color: transparent;
@@ -228,14 +325,17 @@ a {
 .server_icon span {
   position: absolute;
   left: 65px;
-  top: 8px;
+  top: 0;
+  height: 40px;
+  box-sizing: border-box;
   z-index: 99;
   background-color: var(--background-light-c);
+  border: 1px solid var(--border-c);
   color: var(--text-c);
-  padding: 8px 11px;
+  padding: 10px 11px;
   font-size: 14.5px;
   font-weight: 600;
-  border-radius: 4px;
+  border-radius: 8px;
   opacity: 0;
   display: none;
   transition: opacity 0.1s;
@@ -247,35 +347,30 @@ a {
   display: block;
 }
 
-.server_icon:hover {
-  border-radius: 12px;
-}
-
-
-
-/* Main view panel, holds server, dm and friends view*/
-
-.main_container {
-  height: 100vh;
-  width: calc(100vw - 73px);
-  display: grid;
-  grid-template-columns: 240px 1fr;
-}
-
 .main_sidebar {
-  background-color: var(--background-medium-c);
   position: relative;
-  border-right: 1px solid var(--text-c);
+  grid-column: 2;
+  width: 100%;
+  border-top: 1px solid var(--border-c);
+  border-left: 1px solid var(--border-c);
+  border-top-left-radius: 10px;
   box-sizing: border-box;
+  position: absolute;
+  padding-bottom: 56px;
+  top: 0;
+  bottom: 64px;
 }
 
 .main_sidebar .header {
+  display: inline-block;
   height: 48px;
   line-height: 48px;
   padding: 0 12px;
   box-sizing: border-box;
   font-weight: 600;
-  border-bottom: 1px solid var(--text-medium-c);
+  border-bottom: 1px solid var(--border-c);
+  width: 100%;
+  margin-bottom: 8px;
 }
 
 .header span {
@@ -285,40 +380,114 @@ a {
 }
 
 .main_sidebar_list {
-  height: calc(100% - 54px - 48px);
   overflow-x: hidden;
   overflow-y: auto;
+  height: 100%;
 }
 
-.main_sidebar .sidebar_settings {
-  height: 54px;
-  width: 100%;
-  background-color: var(--background-dark-c);
-  position: absolute;
-  bottom: 0;
-  border-top: 1px solid var(--text-c);
+.main_sidebar_list::-webkit-scrollbar {
+  width: 3px;
 }
+
+/* Handle */
+.main_sidebar_list::-webkit-scrollbar-thumb {
+  background: var(--text-medium-c);
+  border-radius: 3px;
+}
+
+.channel_button {
+  width: calc(100% - 16px);
+  margin: 2px 8px 0px 8px;
+  padding: 5px 8px;
+  box-sizing: border-box;
+  color: var(--text-medium-c);
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.channel_button:hover {
+  color: var(--text-c);
+  background-color: var(--background-highlight-c);
+}
+
+.channel_button.active {
+  font-weight: 500;
+  background-color: var(--background-highlight-dark-c);
+  color: var(--text-c);
+}
+
+.channel_button img {
+  margin-right: 4px;
+  height: 20px;
+  filter: invert() brightness(0.4);
+}
+
+.channel_button.active img {
+  filter: invert() brightness(0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+  .channel_button img {
+      filter: invert() brightness(0.6);
+    }
+  
+    .channel_button.active img {
+      filter: invert() brightness(0.8);
+    }
+}
+
+
+
+.sidebar_settings_container {
+  position: absolute;
+  left:0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--background-c);
+  height: 64px;
+}
+
+.sidebar_settings {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  height: 54px;
+  width: calc(100% - 16px);
+  background-color: var(--background-light-c);
+  border: 1px solid var(--border-c);
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+
 
 .sidebar_settings .account_area {
   margin: 8px;
-  padding: 2px;
-  width: 50%;
-  border-radius: 4px;
+  margin-right: 0;
+  padding: 0;
+  border-radius: 8px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
   height: 38px;
   box-sizing: border-box;
   background-color: transparent;
   border: none;
-  transition: background-color 0.25s;
+  transition: background-color 0.1s;
   cursor: pointer;
   text-align: start;
   overflow-x: hidden;
   overflow-y: hidden;
   font-size: 13px;
-  display: inline-block;
+  display: flex;
+  align-items: center;
 }
 
 .sidebar_settings .account_area:hover {
-  background-color: var(--background-light-c);
+  background-color: var(--background-highlight-c);
 }
 
 .sidebar_settings .account_area img {
@@ -328,7 +497,7 @@ a {
 }
 
 .sidebar_settings .account_area div {
-  width: 74px;
+  margin-left: 8px;
   display: inline-block;
   text-wrap: nowrap;
   overflow-x: hidden;
@@ -349,20 +518,31 @@ a {
   height: 32px;
   padding: 0;
   margin: 0;
+  margin-left: 4px;
   border: none;
   background-color: transparent;
   border-radius: 4px;
-  transition: background-color 0.25s;
+  transition: background-color 0.1s;
   cursor: pointer;
   color: var(--text-medium-c);
 }
 
 .sidebar_settings .quick_settings button:hover {
+  background-color: var(--background-highlight-c);
+}
+
+
+/* Main view panel, holds server, dm and friends view*/
+
+.main_container {
+  border-top: 1px solid var(--border-c);
   background-color: var(--background-light-c);
 }
 
+
+
 .main_panel {
-  background-color: var(--background-light-c);
+  background-color: var(--background-c);
 }
 
 .main_panel .header {
@@ -371,6 +551,7 @@ a {
   padding: 0 12px;
   box-sizing: border-box;
   font-weight: 600;
-  border-bottom: 1px solid var(--text-medium-c);
+  border-bottom: 1px solid var(--border-c);
   color: var(--text-medium-c);
+  background-color: var(--background-light-c);
 }

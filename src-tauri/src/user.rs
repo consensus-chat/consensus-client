@@ -82,7 +82,7 @@ pub async fn request_token(state: &crate::AppState, instance: &str) -> Result<Co
     let account = state.account.as_ref().expect("Need to be logged in to request tokens.");
     let sign_on_instance = account.instance.clone();
     let id = account.id.clone();
-    let authkey = hex::decode(account.authkey_private.clone()).expect("Expecting authkey to be valid hex.");
+    let authkey = hex::decode(account.authkey_private.clone()).expect("Expecting authkey to be valid hex");
 
     let msg = sign_on_instance.clone() + &id;
     let key = ring::signature::Ed25519KeyPair::from_pkcs8(&authkey).expect("Expecting authkey to be a valid Ed25519 key pair");

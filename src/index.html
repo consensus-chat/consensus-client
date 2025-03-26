@@ -9,27 +9,146 @@
   </head>
 
   <body>
-    <div class="view" style="display: none;" id="main_view">
-      <div class="server_bar">
-        <button class="server_icon" style="background-image: url(assets/consensus256.png);"><span>Direct Messages</span></button>
-        <hr>
-        <div id="server_bar">
-        </div>
+    <div data-tauri-drag-region class="title_bar_container">
+      <span style="font-weight: 800; color: var(--text-medium-c); text-align: center; line-height: 35px; padding-left: 8px; margin-right: auto;">
+        Consensus
+      </span>
+      <div class="titlebar-button" id="titlebar-minimize">
+        <img src="assets/icons/window_minimize.png" alt="minimize" />
       </div>
-      <div class="main_container">
+      <div class="titlebar-button" id="titlebar-maximize">
+        <img src="assets/icons/window_maximize.png" alt="maximize" />
+      </div>
+      <div class="titlebar-button titlebar-close" id="titlebar-close" style="titlebar-button:hover {background-color: var(--accent-error-c);}">
+        <img src="assets/icons/window_close.png" alt="close" />
+      </div>
+    </div>
+
+    <div class="view" id="main_view">
+      <div class="left_sidebar" id="left_sidebar">
+        <div class="server_bar no_scroll_bar" >
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <hr>
+          <div id="server_bar">
+          </div>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+          <button class="server_icon" style="background-image: url(assets/consensus256.png);">
+            <span>Direct Messages</span>
+          </button>
+        </div>
+
         <div class="main_sidebar" id="main_sidebar">
           <div class="header" id="main_sidebar_header">
             <span>Channel bar</span>
           </div>
           <div class="main_sidebar_list" id="main_sidebar_list">
-
+            <div class="channel_button">
+              <img src="assets/icons/hash.svg">
+              genderal
+            </div>
           </div>
+        </div>
 
+        <div class="sidebar_settings_container">
           <div class="sidebar_settings">
             <button class="account_area">
               <img src="assets/consensus256.png">
               <div>
-                <span style="color: var(--text-c);" id="sidebar_settings_account">account name</span><br>
+                <span style="color: var(--text-c); font-weight: 600;" id="sidebar_settings_account">account name</span><br>
                 <span style="color: var(--text-medium-c);" id="sidebar_settings_status">ask me about</span>
               </div>
             </button>
@@ -38,6 +157,13 @@
             </div>
           </div>
         </div>
+
+        <div class="resize_handle" id="left_resize_handle">
+        </div>
+      </div>
+      
+      <div class="main_container">
+        
         <div class="main_panel" id="main_panel">
           <div class="header" id="main_panel_header">
             <span>chat panel</span>
@@ -47,11 +173,13 @@
         </div>
       
       </div>
-    </div>
-    <div class="view_cover" id="login_screen">
-      <div class="login_form_container" id="login_form_container">
+
+      <div class="view_cover" id="login_screen">
+        <div class="login_form_container" id="login_form_container">
+        </div>
       </div>
+      <div class="view_cover" id="loading_cover"></div>
     </div>
-    <div class="view_cover" id="loading_cover"></div>
+    
   </body>
 </html>
