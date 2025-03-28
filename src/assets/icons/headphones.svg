@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 24 24"
+   fill="none"
+   stroke="currentColor"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   width="24"
+   height="24"
+   stroke-width="2"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="headphones.svg"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs12" />
+  <sodipodi:namedview
+     id="namedview10"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="36.375"
+     inkscape:cx="12"
+     inkscape:cy="11.986254"
+     inkscape:window-width="2560"
+     inkscape:window-height="1377"
+     inkscape:window-x="-8"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg8" />
+  <path
+     d="m 2.937455,12.700217 m 0,2.274913 a 2.2749142,2.2749142 0 0 1 2.2749142,-2.274913 h 1.137457 a 2.2749142,2.2749142 0 0 1 2.2749141,2.274913 v 3.412372 A 2.2749142,2.2749142 0 0 1 6.3498262,20.662416 H 5.2123692 A 2.2749142,2.2749142 0 0 1 2.937455,18.387502 Z"
+     id="path2"
+     style="stroke-width:2.27491" />
+  <path
+     d="m 15.449482,12.700217 m 0,2.274913 a 2.2749142,2.2749142 0 0 1 2.274915,-2.274913 h 1.137457 a 2.2749142,2.2749142 0 0 1 2.274914,2.274913 v 3.412372 a 2.2749142,2.2749142 0 0 1 -2.274914,2.274914 h -1.137457 a 2.2749142,2.2749142 0 0 1 -2.274915,-2.274914 z"
+     id="path4"
+     style="stroke-width:2.27491" />
+  <path
+     d="m 2.937455,14.97513 v -3.412371 a 9.0996566,9.0996566 0 0 1 18.199313,0 v 3.412371"
+     id="path6"
+     style="stroke-width:2.27491" />
+</svg>

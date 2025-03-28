@@ -33,6 +33,7 @@ pub async fn attempt_login(
                     authkey_private,
                 };
                 state.account = Some(account.clone());
+                state.get_user_data().await?;
                 
                 Ok(account)
             },
@@ -68,6 +69,7 @@ pub async fn attempt_registration(
                     authkey_private,
                 };
                 state.account = Some(account.clone());
+                state.get_user_data().await?;
                 
                 Ok(account)
             },
@@ -103,7 +105,7 @@ pub async fn request_token(state: &crate::AppState, instance: &str) -> Result<Co
 
 impl crate::AppState {
     /// get token for instance from auth_tokens, if no valid one is available, request one
-    async fn token(&mut self, instance: &str) -> String {
+    pub async fn token(&mut self, instance: &str) -> String {
         match self.auth_tokens.get(instance) {
             Some(token) => {
                 let time_valid = chrono::NaiveDateTime::parse_from_str(&token.valid_until, "%Y-%m-%d %H:%M:%S").unwrap().and_utc();
@@ -116,6 +118,49 @@ impl crate::AppState {
         let token = request_token(self, instance).await.unwrap();
         self.auth_tokens.insert(instance.to_string(), token.clone());
         return token.token;
+    }
+
+    // get user data from sign on instance, overwrite current user data so it is mainly ued for logging in.
+    pub async fn get_user_data(&mut self) -> Result<(), String> {
+        let sign_on_instance = self.account.as_ref().expect("can only get user data with account").instance.clone();
+        let token = self.token(&sign_on_instance).await;
+
+        let res = network::make_req(
+            &self,
+            &sign_on_instance,
+            ConsensusReq::ReqUserData { token }
+        )
+        .await?;
+
+        match res {
+            ConsensusRes::SyncedUserData(data) => self.synced_user_data = data,
+            ConsensusRes::Error(e) => return Err(e.to_string()),
+            _ => return Err("Unexpected response".into())
+        }
+
+        Ok(())
+    }
+
+    // sync user data from sign on instance
+    pub async fn sync_user_data(&mut self) -> Result<(), String> {
+        let sign_on_instance = self.account.as_ref().expect("can only get user data with account").instance.clone();
+        let token = self.token(&sign_on_instance).await;
+        let data = self.synced_user_data.clone();
+
+        let res = network::make_req(
+            &self,
+            &sign_on_instance,
+            ConsensusReq::SyncUserData { token, data }
+        )
+        .await?;
+
+        match res {
+            ConsensusRes::SyncedUserData(data) => self.synced_user_data = data,
+            ConsensusRes::Error(e) => return Err(e.to_string()),
+            _ => return Err("Unexpected response".into())
+        }
+        
+        Ok(())
     }
 }
 

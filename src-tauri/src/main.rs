@@ -4,7 +4,8 @@
 use std::collections::HashMap;
 
 use network::ConsensusToken;
-use server::ServerInfo;
+use network::ServerData;
+use network::SyncedUserData;
 use tauri::{async_runtime::Mutex, Manager};
 
 mod network;
@@ -34,17 +35,16 @@ struct Account {
 
 #[derive(Clone, serde::Deserialize, serde::Serialize)]
 struct OnlineInfo {
-    servers: Vec<server::ServerInfo>,
+    pub servers: Vec<ServerData>,
 }
 
-struct AppState {
-    context: AppContext,
-    servers: Vec<server::ServerInfo>,
-    account: Option<Account>,
-    client: reqwest::Client,
+pub struct AppState {
+    pub context: AppContext,
+    pub account: Option<Account>,
+    pub client: reqwest::Client,
     /// Information that is stored on the sign-on instance and synced over all devices. This includes most
     /// of the application info like added servers, friends and some settings
-    online_info: Option<OnlineInfo>,
+    pub synced_user_data: SyncedUserData,
     /// Authentication tokens for instances. Do not access these directly, use the `AppState::token()`
     /// function instead. The function checks for token validity and automatically requests new tokens
     /// from instances.
@@ -54,22 +54,22 @@ struct AppState {
 #[derive(Clone, serde::Deserialize, serde::Serialize)]
 struct InterfaceState {
     account: Option<Account>,
-    servers: Vec<ServerInfo>,
+    servers: Vec<ServerData>,
 }
 
 impl InterfaceState {
     fn from_app_state(state: &AppState) -> InterfaceState {
         InterfaceState {
             account: state.account.clone(),
-            servers: state.servers.clone()
+            servers: state.synced_user_data.servers.clone()
         }
     }
 }
 
 
 #[tauri::command]
-async fn pull_state(state: tauri::State<'_, Mutex<crate::AppState>>) -> Result<InterfaceState, ()> {
-    let lstate = &state.lock().await;
+async fn pull_state(state: tauri::State<'_, Mutex<crate::AppState>>) -> Result<InterfaceState, String> {
+    let lstate = state.lock().await;
     Ok(InterfaceState::from_app_state(&lstate))
 }
 
@@ -82,13 +82,19 @@ fn main() {
 
             let app_state = AppState {
                 context: AppContext::Login,
-                servers: vec![server::ServerInfo::test_server()],
                 account: match store.get("account") {
                         Some(account) => Some(serde_json::from_value(account)?),
                         None => None,
                     },
                 client: reqwest::Client::new(),
-                online_info: None,
+                synced_user_data: SyncedUserData {
+                    last_synced: "".into(),
+                    display_name: "".into(),
+                    status: "".into(),
+                    pronouns: "".into(),
+                    bio: "".into(),
+                    servers: vec![]
+                },
                 auth_tokens: HashMap::new(),
             };
 
@@ -103,7 +109,9 @@ fn main() {
             user::gather_account_info,
             pull_state,
             server::get_server_list,
-            server::open_server
+            server::open_server,
+            server::create_server,
+            server::join_server,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
